@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "290658598740",
+    "project_id": "tmdt-e774b",
+    "storage_bucket": "tmdt-e774b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290658598740:android:cceec0bf92cfc8f8e7d2c1",
+        "android_client_info": {
+          "package_name": "com.dailoi.e_fa_shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "290658598740-fjqgdblnmg0g1eqhjho6dj6d06v20pkt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5hCAJ4eurEfVSaypVpTVu5H0qLARJfnU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290658598740-fjqgdblnmg0g1eqhjho6dj6d06v20pkt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
