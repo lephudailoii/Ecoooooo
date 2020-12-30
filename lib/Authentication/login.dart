@@ -151,9 +151,9 @@ class _LoginState extends State<Login>
   Future readData(FirebaseUser fUser)async{
     Firestore.instance.collection("user").document(fUser.uid).get().then((dataSnapshot)
     async{
-      await EcommerceApp.sharedPreferences.setString("uid", dataSnapshot.data[EcommerceApp.userUID]);
-      await EcommerceApp.sharedPreferences.setString(EcommerceApp.userEmail, dataSnapshot.data[EcommerceApp.userEmail]);
-      await EcommerceApp.sharedPreferences.setString(EcommerceApp.userName, dataSnapshot.data[EcommerceApp.userName]);
+      await EcommerceApp.setSharePrefercence("uid", dataSnapshot.data[EcommerceApp.userUID]);
+      await EcommerceApp.setSharePrefercence(EcommerceApp.userEmail, dataSnapshot.data[EcommerceApp.userEmail]);
+      await EcommerceApp.setSharePrefercence(EcommerceApp.userName, dataSnapshot.data[EcommerceApp.userName]);
       List<String> cartList = dataSnapshot.data[EcommerceApp.userCartList].cast<String>();
       await EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList,["garbageValue"] );
     });
