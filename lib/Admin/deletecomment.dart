@@ -30,7 +30,7 @@ class _CommentAdminState extends State<CommentAdmin> {
     itemRef.document(docu).setData({
       "idcm": docu,
       "cm": a,
-      "name":name,
+      "name":"ADMIN",
     });}
 
   @override

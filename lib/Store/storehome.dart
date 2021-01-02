@@ -295,6 +295,8 @@ void checkItemInCart(String id, BuildContext context)
 
 addItemToCart(String id,BuildContext context){
   List tempCartList = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+  List tempCartListquan = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartListQuantity);
+  tempCartListquan.add("1");
   tempCartList.add(id);
   EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
   .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
@@ -304,6 +306,13 @@ addItemToCart(String id,BuildContext context){
     Fluttertoast.showToast(msg: "Item Add Success");
     EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, tempCartList);
     Provider.of<CartItemCounter>(context,listen: false).displayResult();
+  });
+  EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
+      .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+      .updateData({
+    EcommerceApp.userCartListQuantity: tempCartListquan,
+  }).then((v){
+    EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartListQuantity, tempCartListquan);
   });
 
 }

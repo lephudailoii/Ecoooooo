@@ -94,7 +94,6 @@ class _DashBoardState extends State<DashBoard> {
                   dropdownValuey = newValue;
                   syear = newValue;
                   date=ssmonth+syear;
-
                 });
               },
               isExpanded: true,
@@ -148,7 +147,7 @@ class _DashBoardState extends State<DashBoard> {
 }
 class DashBoardCard extends StatefulWidget {
   final   DashBoardModel model;
-  final double totalAmount;
+  final int totalAmount;
 
   DashBoardCard({Key key,this.model,this.totalAmount}): super(key:  key);
 

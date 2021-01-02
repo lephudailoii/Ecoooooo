@@ -68,7 +68,7 @@ class _CartPageState extends State<CartPage> {
             ),
           ),
           StreamBuilder<QuerySnapshot>(
-            stream: EcommerceApp.firestore.collection("items").where("shortInfo",whereIn: EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList)).snapshots(),
+            stream: EcommerceApp.firestore.collection("items").where("id",whereIn: EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList)).snapshots(),
             builder: (context,snapshot){
               return !snapshot.hasData
                   ? SliverToBoxAdapter(
@@ -96,7 +96,7 @@ class _CartPageState extends State<CartPage> {
                           Provider.of<TotalAmount>(context,listen: false).display(totalAmount);
                         });
                       }
-                      return sourceInfoCart(model,context,iditem,removeCartFunction: ()=> removeItemFromUserCart(model.shortInfo));
+                      return sourceInfoCart(model,context,iditem,removeCartFunction: ()=> removeItemFromUserCart(model.id));
                     },
                   childCount:  snapshot.hasData ? snapshot.data.documents.length : 0,
                 ),

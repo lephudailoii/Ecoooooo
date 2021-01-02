@@ -6,7 +6,7 @@ class DashBoardModel {
         });
 
   DashBoardModel.fromJson(Map<String, dynamic> json) {
-    totalAmount = json['totalAmount'];
+      totalAmount = json['totalAmount'];
   }
 
   Map<String, dynamic> toJson() {

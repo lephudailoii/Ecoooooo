@@ -35,5 +35,14 @@ class EcommerceApp
    static final String orderTime ='orderTime';
    static final String step = 'step';
    static final String isSuccess ='isSuccess';
+   static Future<bool> setSharePrefercence(String key, String value) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.setString(key, value);
+   }
+
+   static Future<String> getSharePrefercence(String key) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.getString(key);
+   }
 
 }

@@ -159,7 +159,6 @@ class _PaymentPageState extends State<PaymentPage> {
     }).whenComplete(() => {
       emptyCartNow()
     });
-    writeitem();
 
 
   }
@@ -179,16 +178,7 @@ class _PaymentPageState extends State<PaymentPage> {
     Navigator.pushReplacement(context, route);
   }
   
-  // Future writeOrderDetailsForUser(Map<String, dynamic>data)async {
-  //
-  //   await  EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
-  //       .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-  //       .collection(EcommerceApp.collectionOrders)
-  //       .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)+data['orderTime'])
-  //       .setData(data);
-  //
-  //
-  // }
+
 
   Future writeDashBoard(Map<String, dynamic>data) async{
     int month = DateTime.now().month;
@@ -200,16 +190,7 @@ class _PaymentPageState extends State<PaymentPage> {
         .document(a)
         .updateData(data);
   }
-  // Future writeOrderDetailsForUserHistory(Map<String, dynamic>data) async {
-  //   await EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
-  //       .document(
-  //       EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-  //       .collection(EcommerceApp.collectionHistoryUser)
-  //       .document(
-  //       EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
-  //           data['orderTime'])
-  //       .setData(data);
-  // }
+
 
   Future writeOrderDetailsForAdmin(Map<String, dynamic>data) async{
     await EcommerceApp.firestore.collection(EcommerceApp.collectionOrders)
@@ -232,32 +213,32 @@ class _PaymentPageState extends State<PaymentPage> {
         .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)+data['orderTime'])
         .setData(data);
    }
-  Future writeitem() async{
-    List<String> a = new List();
-     a = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
-    int sl= a.length;
-    for(int p=0;p>=sl;p++)
-      {
-
-        FutureBuilder<DocumentSnapshot>(
-          future: EcommerceApp.firestore
-              .collection("items")
-              .document(a[p])
-              .get(),
-          builder: (c,snap)
-          {
-            return snap.hasData
-                ? {
-              ItemModel.fromJson(snap.data.data)}
-                : Center(child: circularProgress(),);
-          },
-        );
-        ItemModel model ;
-        int quanupdate = model.quantity-1;
-        await EcommerceApp.firestore.collection("items")
-            .document(a[p])
-            .updateData({"quantity":quanupdate});}
-      }
+  // Future writeitem() async{
+  //   List<String> a = new List();
+  //    a = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+  //   int sl= a.length;
+  //   for(int p=0;p>=sl;p++)
+  //     {
+  //
+  //       FutureBuilder<DocumentSnapshot>(
+  //         future: EcommerceApp.firestore
+  //             .collection("items")
+  //             .document(a[p])
+  //             .get(),
+  //         builder: (c,snap)
+  //         {
+  //           return snap.hasData
+  //               ? {
+  //             ItemModel.fromJson(snap.data.data)}
+  //               : Center(child: circularProgress(),);
+  //         },
+  //       );
+  //       ItemModel model ;
+  //       int quanupdate = model.quantity-1;
+  //       await EcommerceApp.firestore.collection("items")
+  //           .document(a[p])
+  //           .updateData({"quantity":quanupdate});}
+  //     }
 
 
   // Future writeOrderDetailsForHistoryAdmin(Map<String, dynamic>data) async{
