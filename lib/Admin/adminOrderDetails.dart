@@ -303,16 +303,6 @@ class AdminShippingDetails extends StatelessWidget {
         .collection(EcommerceApp.collectionOrders)
         .document(mOrderId)
         .delete();
-    EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
-        .document(orderBy)
-        .collection(EcommerceApp.collectionHistoryUser)
-        .document(mOrderId)
-        .delete();
-
-    EcommerceApp.firestore
-        .collection(EcommerceApp.collectionHistoryAdmin)
-        .document(mOrderId)
-        .delete();
 
     getOrderId = "";
     Route route = MaterialPageRoute(builder: (c)=>UploadPage());

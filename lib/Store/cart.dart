@@ -68,7 +68,7 @@ class _CartPageState extends State<CartPage> {
             ),
           ),
           StreamBuilder<QuerySnapshot>(
-            stream: EcommerceApp.firestore.collection("items").where("shortInfo",whereIn: EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList)).snapshots(),
+            stream: EcommerceApp.firestore.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection(EcommerceApp.userCartList).where("id",whereIn: EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList)).snapshots(),
             builder: (context,snapshot){
               return !snapshot.hasData
                   ? SliverToBoxAdapter(
@@ -85,18 +85,18 @@ class _CartPageState extends State<CartPage> {
                       if (index ==0)
                         {
                           totalAmount = 0;
-                          totalAmount = model.price + totalAmount;
+                          totalAmount = model.price*model.quantity + totalAmount;
                         }
                       else
                         {
-                        totalAmount = model.price + totalAmount;
+                        totalAmount = model.price*model.quantity + totalAmount;
                       }
                       if(snapshot.data.documents.length-1 ==index){
                         WidgetsBinding.instance.addPostFrameCallback((t) {
                           Provider.of<TotalAmount>(context,listen: false).display(totalAmount);
                         });
                       }
-                      return sourceInfoCart(model,context,iditem,removeCartFunction: ()=> removeItemFromUserCart(model.shortInfo));
+                      return sourceInfoCart(model,context,iditem,removeCartFunction: ()=> removeItemFromUserCart(model.id));
                     },
                   childCount:  snapshot.hasData ? snapshot.data.documents.length : 0,
                 ),
@@ -125,9 +125,14 @@ class _CartPageState extends State<CartPage> {
      ),
    );
   }
-  removeItemFromUserCart(String shortInfoAsId){
+  removeItemFromUserCart(String iditem){
+    EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
+        .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .collection(EcommerceApp.userCartList)
+        .document(iditem)
+        .delete();
     List tempCartList = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
-    tempCartList.remove(shortInfoAsId);
+    tempCartList.remove(iditem);
     EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
         .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
         .updateData({
@@ -140,10 +145,17 @@ class _CartPageState extends State<CartPage> {
     });
   }
 }
+  updatequan(String iditem,int quan)
+  {
+    final itemRef = Firestore.instance.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection(EcommerceApp.userCartList);
+    itemRef.document(iditem).updateData({
+      "quantity": quan,});
+  }
 
 Widget sourceInfoCart(ItemModel model, BuildContext context,String iditem,
     {Color background, removeCartFunction}) {
-  int quantity =1;
+  final itemRef = Firestore.instance.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection(EcommerceApp.userCartList);
+  int quantity =   model.quantity;
   return InkWell(
     onTap: (){
 
@@ -260,6 +272,9 @@ Widget sourceInfoCart(ItemModel model, BuildContext context,String iditem,
                             icon: Icon(Icons.plus_one,color: Colors.pinkAccent,),
                             onPressed: (){
                               quantity = quantity+1;
+                              updatequan(iditem, quantity);
+                              String z= quantity.toString();
+                              Fluttertoast.showToast(msg: z);
                             },
                           )
                       ),
@@ -268,8 +283,11 @@ Widget sourceInfoCart(ItemModel model, BuildContext context,String iditem,
                           child:IconButton(
                             icon: Icon(Icons.exposure_minus_1,color: Colors.pinkAccent,),
                             onPressed: (){
-                              if(quantity>=1)
+                              if(quantity>1)
                               {   quantity = quantity-1;
+                              updatequan(iditem, quantity);
+                              String q= quantity.toString();
+                              Fluttertoast.showToast(msg: q);
                               }
                             },
                           )
@@ -285,4 +303,5 @@ Widget sourceInfoCart(ItemModel model, BuildContext context,String iditem,
       ),
     ),
   );
+
 }

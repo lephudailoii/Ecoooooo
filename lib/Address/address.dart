@@ -24,6 +24,7 @@ class _AddressState extends State<Address>
 {
   @override
   Widget build(BuildContext context) {
+    String id;
     return SafeArea(
       child: Scaffold(
         appBar: MyAppBar(),
@@ -52,9 +53,11 @@ class _AddressState extends State<Address>
                         :snapshot.data.documents.length == 0
                         ? noAddressCard()
                         : ListView.builder(
+
                       itemCount: snapshot.data.documents.length,
                       shrinkWrap: true,
                       itemBuilder: (context,index){
+                         id =snapshot.data.documents[index].documentID;
                         return AddressCard(
                           currentIndex: address.count,
                           value: index,
@@ -75,7 +78,8 @@ class _AddressState extends State<Address>
           backgroundColor: Colors.pink,
           icon: Icon(Icons.credit_card_sharp),
           onPressed: (){
-            Route route =MaterialPageRoute(builder: (c)=>BankCard());
+            Route route =MaterialPageRoute(builder: (c)=>BankCard( addressId: id,
+              totalAmount: widget.totalAmount,));
             Navigator.pushReplacement(context, route);
           },
         ),

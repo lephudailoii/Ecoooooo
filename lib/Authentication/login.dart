@@ -149,7 +149,7 @@ class _LoginState extends State<Login>
       });
   }
   Future readData(FirebaseUser fUser)async{
-    Firestore.instance.collection("user").document(fUser.uid).get().then((dataSnapshot)
+    Firestore.instance.collection("users").document(fUser.uid).get().then((dataSnapshot)
     async{
       await EcommerceApp.setSharePrefercence("uid", dataSnapshot.data[EcommerceApp.userUID]);
       await EcommerceApp.setSharePrefercence(EcommerceApp.userEmail, dataSnapshot.data[EcommerceApp.userEmail]);

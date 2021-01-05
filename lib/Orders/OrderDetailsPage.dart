@@ -68,7 +68,7 @@ class OrderDetails extends StatelessWidget {
                     FutureBuilder<QuerySnapshot>(
                       future: EcommerceApp.firestore
                       .collection("items")
-                      .where("shortInfo",whereIn: dataMap[EcommerceApp.productID])
+                      .where("id",whereIn: dataMap[EcommerceApp.productID])
                       .getDocuments(),
                       builder: (c,dataSnapshot)
                       {
@@ -91,10 +91,26 @@ class OrderDetails extends StatelessWidget {
                       builder: (c,snap)
                       {
                         return snap.hasData
-                            ? ShippingDetails(model: AddressModel.fromJson(snap.data.data),status:dataMap[EcommerceApp.isSuccess])
+                            ? ShippingDetails(model: AddressModel.fromJson(snap.data.data),status:dataMap[EcommerceApp.isSuccess]
+                        ,payment: dataMap["paymentDetails"],
+                        list: dataMap[EcommerceApp.productID],)
                             : Center(child: circularProgress(),);
                       },
-                    )
+                    ),
+                    // FutureBuilder<DocumentSnapshot>(
+                    //   future: EcommerceApp.firestore
+                    //       .collection(EcommerceApp.collectionUser)
+                    //       .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+                    //       .collection(EcommerceApp.collectionOrders)
+                    //       .document(getOrderId)
+                    //       .get(),
+                    //   builder: (c,snap)
+                    //   {
+                    //     return snap.hasData
+                    //         ? ShippingDetails(model: AddressModel.fromJson(snap.data.data),status:dataMap[EcommerceApp.isSuccess])
+                    //         : Center(child: circularProgress(),);
+                    //   },
+                    // )
                   ],
                 ),
               )
@@ -173,13 +189,25 @@ class StatusBanner extends StatelessWidget {
 
 
 class ShippingDetails extends StatelessWidget {
+  final String payment;
+  final String ordertime;
   final AddressModel model;
+  final double total;
+  final List<dynamic> list;
   final bool status;
 
-  ShippingDetails({Key key,this.model,this.status}) : super(key: key);
+  ShippingDetails({Key key,this.model,this.status,this.payment,this.list,this.total,this.ordertime}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<String> lists= new List();
+    Map dataMap;
+
+    for(int i=0;i>list.length;i++){
+      lists.add(dataMap[list[i]]);
+    }
+    EcommerceApp.sharedPreferences.setStringList("list", lists);
+    Fluttertoast.showToast(msg: lists[0]);
     double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,13 +270,13 @@ class ShippingDetails extends StatelessWidget {
           child: Center(
             child: InkWell(
               onTap: (){
-                 if(status==true){
+                 // if(status==true){
                   confirmedUserOrderReceived(context,getOrderId);
-               }
-                 else {
-                   Fluttertoast.showToast(msg: "Pls waiting for admin check");
-                 }
-              },
+               // }
+               //   else {
+               //     Fluttertoast.showToast(msg: "Pls waiting for admin check");
+                 },
+              // },
               child: Container(
                 decoration: new BoxDecoration(
                     gradient: new LinearGradient(
@@ -310,8 +338,17 @@ class ShippingDetails extends StatelessWidget {
       ],
     );
   }
+
   confirmedUserOrderReceived(BuildContext context,String mOrderId)
   {
+    final itemRef = Firestore.instance.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection(EcommerceApp.collectionHistoryUser);
+    itemRef.document(mOrderId).setData({
+      "id":mOrderId,
+      EcommerceApp.productID: EcommerceApp.sharedPreferences.getStringList(
+          "list"),
+
+    }
+    );
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionOrders)
         .document(mOrderId)
@@ -322,6 +359,7 @@ class ShippingDetails extends StatelessWidget {
         .collection(EcommerceApp.collectionOrders)
         .document(mOrderId)
         .delete();
+
 
     getOrderId = "";
     Route route = MaterialPageRoute(builder: (c)=>SplashScreen());
@@ -335,12 +373,10 @@ class ShippingDetails extends StatelessWidget {
         .collection(EcommerceApp.collectionOrders)
         .document(mOrderId)
         .delete();
-    EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
-        .document(orderBy)
-        .collection(EcommerceApp.collectionHistoryUser)
+    EcommerceApp.firestore
+        .collection(EcommerceApp.collectionOrders)
         .document(mOrderId)
         .delete();
-
 
     getOrderId = "";
     Route route = MaterialPageRoute(builder: (c)=>SplashScreen());
@@ -349,6 +385,7 @@ class ShippingDetails extends StatelessWidget {
   }
 
 }
+
 
 
 

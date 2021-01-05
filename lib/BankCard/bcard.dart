@@ -12,9 +12,9 @@ import 'package:provider/provider.dart';
 import 'addBankCard.dart';
 
 class BankCard extends StatefulWidget
-{
-  final double totalAmount;
-  const BankCard ({Key key,this.totalAmount}): super(key: key);
+{final String addressId;
+final double totalAmount;
+  const BankCard ({Key key,this.totalAmount,this.addressId}): super(key: key);
   @override
   _BankCardState createState() => _BankCardState();
 }
@@ -60,6 +60,7 @@ class _BankCardState extends State<BankCard>
                           value: index,
                           bankCardId: snapshot.data.documents[index].documentID,
                           totalAmount: widget.totalAmount,
+                          addid: widget.addressId,
                           model: BankCardModel.fromJson(snapshot.data.documents[index].data),
                         );
                       },
@@ -109,6 +110,7 @@ class BankCardd extends StatefulWidget {
   final String idCard;
   final double totalAmount;
   final int ccv;
+  final String addid;
   final int sdt;
   final String name;
   final int value;
@@ -116,7 +118,7 @@ class BankCardd extends StatefulWidget {
 
 
 
-  BankCardd({Key key,this.model,this.bankCardId,this.idCard,this.totalAmount,this.ccv,this.sdt,this.name,this.value,this.currentIndex}): super(key:  key);
+  BankCardd({Key key,this.model,this.bankCardId,this.idCard,this.totalAmount,this.addid,this.ccv,this.sdt,this.name,this.value,this.currentIndex}): super(key:  key);
 
 
   @override
@@ -191,7 +193,7 @@ class _BankCarddState extends State<BankCardd> {
               onPressed: ()
               {
                 Route route = MaterialPageRoute(builder: (c)=>PaymentPage(
-                  addressId : widget.bankCardId,
+                  addressId : widget.addid,
                   totalAmount: widget.totalAmount,
                   paymentdetail: " Bank Card",
                 ));

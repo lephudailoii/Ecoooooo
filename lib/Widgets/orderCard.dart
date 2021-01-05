@@ -7,10 +7,11 @@ import '../Store/storehome.dart';
 
 
 class OrderCard extends StatelessWidget {
+  final int quantity;
   final int itemCount;
   final List<DocumentSnapshot> data;
   final String orderID;
-  OrderCard({Key key,this.itemCount,this.data,this.orderID}): super (key: key);
+  OrderCard({Key key,this.itemCount,this.quantity,this.data,this.orderID}): super (key: key);
 
 
   @override
@@ -18,11 +19,8 @@ class OrderCard extends StatelessWidget {
     return  InkWell(
       onTap: (){
         Route route;
-        if(counter == 0)
-          {
-            counter = counter +1;
             route = MaterialPageRoute(builder: (c)=>OrderDetails(orderID:orderID));
-          }
+
         Navigator.push(context, route);
 
       },
@@ -62,7 +60,7 @@ Widget sourceOrderInfo(ItemModel model, BuildContext context,
 
   return  Container(
     color: Colors.grey[100],
-    height: 170.0,
+    height: 200.0,
     width: width,
     child: Row(
       children: [
@@ -109,6 +107,7 @@ Widget sourceOrderInfo(ItemModel model, BuildContext context,
                           ],
                         ),
                       ),
+
                     ],
                   )
                 ],

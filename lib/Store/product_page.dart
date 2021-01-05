@@ -77,7 +77,7 @@ class _ProductPageState extends State<ProductPage> {
                     padding: EdgeInsets.only(top: 8.0),
                     child: Center(
                       child: InkWell(
-                        onTap: ()=> checkItemInCart(widget.itemModel.shortInfo, context),
+                        onTap: ()=> checkItemInCart(widget.itemModel.id,widget.itemModel, context),
                         child: Container(
                           decoration: new BoxDecoration(
                               gradient: new LinearGradient(
@@ -134,32 +134,7 @@ class _ProductPageState extends State<ProductPage> {
   }
 
 }
-Future writeitem() async{
-  List<String> a = new List();
-  a = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
-  int sl= a.length;
-  for(int p=0;p>=sl;p++)
-  {
 
-    FutureBuilder<DocumentSnapshot>(
-      future: EcommerceApp.firestore
-          .collection("items")
-          .document(a[p])
-          .get(),
-      builder: (c,snap)
-      {
-        return snap.hasData
-            ? {
-          ItemModel.fromJson(snap.data.data)}
-            : Center(child: circularProgress(),);
-      },
-    );
-    ItemModel model ;
-    int quanupdate = model.quantity-1;
-    await EcommerceApp.firestore.collection("items")
-        .document(a[p])
-        .updateData({"quantity":quanupdate});}
-}
 
 const boldTextStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
 const largeTextStyle = TextStyle(fontWeight: FontWeight.normal, fontSize: 20);

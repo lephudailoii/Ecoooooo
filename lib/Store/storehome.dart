@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Store/cart.dart';
@@ -88,7 +89,6 @@ class _StoreHomeState extends State<StoreHome> {
           ],
         ),
         drawer: MyDrawer(),
-
         body:
         CustomScrollView(
            slivers: [
@@ -223,7 +223,7 @@ Widget sourceInfo(ItemModel model, BuildContext context,String iditem,
                     child: IconButton(
                       icon: Icon(Icons.add_shopping_cart,color: Colors.pinkAccent,),
                       onPressed: (){
-                        checkItemInCart(model.id, context);
+                        checkItemInCart(model.id,model, context);
                       },
                     )
                   ),
@@ -286,25 +286,39 @@ Widget card({Color primaryColor = Colors.redAccent, String imgPath}) {
 
 
 
-void checkItemInCart(String id, BuildContext context)
+void checkItemInCart(String id,ItemModel model, BuildContext context)
 {
   EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList).contains(id)
       ? Fluttertoast.showToast(msg: "Item is aldeady in Cart")
-      : addItemToCart(id,context);
+      : addItemToCart(id,model,context);
 }
 
-addItemToCart(String id,BuildContext context){
+addItemToCart(String id,ItemModel model,BuildContext context){
   List tempCartList = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
   tempCartList.add(id);
-  EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
-  .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-  .updateData({
-    EcommerceApp.userCartList: tempCartList,
-  }).then((v){
+  final itemRef = Firestore.instance.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection(EcommerceApp.userCartList);
+  itemRef.document(id).setData({
+    "id":id,
+    "shortInfo": model.shortInfo,
+    "longDescription": model.longDescription,
+    "price": model.price,
+    "quantity": 1,
+    "thumbnailUrl": model.thumbnailUrl,
+    "title": model.title,
+  }
+  );
     Fluttertoast.showToast(msg: "Item Add Success");
     EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, tempCartList);
     Provider.of<CartItemCounter>(context,listen: false).displayResult();
-  });
+  // EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
+  // .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+  // .updateData({
+  //   EcommerceApp.userCartList: tempCartList,
+  // }).then((v){
+  //   Fluttertoast.showToast(msg: "Item Add Success");
+  //   EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, tempCartList);
+  //   Provider.of<CartItemCounter>(context,listen: false).displayResult();
+  // });
 
 }
 Widget image_carousel = new Container(
