@@ -4,6 +4,7 @@ import 'package:e_shop/Admin/AdHistory.dart';
 import 'package:e_shop/Admin/adminShiftOrders.dart';
 import 'package:e_shop/Admin/dashboard.dart';
 import 'package:e_shop/Admin/deleteitem.dart';
+import 'package:e_shop/Admin/manageuser.dart';
 import 'package:e_shop/Widgets/loadingWidget.dart';
 import 'package:e_shop/main.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -94,6 +95,19 @@ class _UploadPageState extends State<UploadPage> with AutomaticKeepAliveClientMi
                     child: Text("Add New Items",style: TextStyle(fontSize: 20.0,color: Colors.white),),
                     color: Colors.green,
                     onPressed: ()=>takeImage(context),
+                  ),
+                ),
+                Icon(Icons.add_box,color: Colors.white,size: 50.0,),
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9.0)),
+                    child: Text("Add New Sale",style: TextStyle(fontSize: 20.0,color: Colors.white),),
+                    color: Colors.green,
+                    onPressed: (){
+                      Route route = MaterialPageRoute(builder: (c)=> ManageUser() );
+                      Navigator.push(context, route);
+                    },
                   ),
                 ),
                 Icon(Icons.history,color: Colors.white,size: 50.0,),

@@ -51,9 +51,14 @@ class _MyOrdersState extends State<MyOrders> {
               itemBuilder: (c,index){
                 return FutureBuilder<QuerySnapshot>(
                   future: Firestore.instance
+<<<<<<< Updated upstream
                   .collection("items")
                   .where("shortInfo",whereIn: snapshot.data.documents[index].data[EcommerceApp.productID])
                   .getDocuments(),
+=======
+                  .collection("items").where("id",whereIn: snapshot.data.documents[index].data[EcommerceApp.productID])
+                    .getDocuments(),
+>>>>>>> Stashed changes
                   builder: (c,snap){
                     return snap.hasData
                         ? OrderCard(

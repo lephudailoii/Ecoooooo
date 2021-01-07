@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Config/config.dart';
 import 'package:e_shop/Address/address.dart';
 import 'package:e_shop/Store/product_page.dart';
+import 'package:e_shop/Store/sale.dart';
 import 'package:e_shop/Widgets/customAppBar.dart';
 import 'package:e_shop/Widgets/loadingWidget.dart';
 import 'package:e_shop/Models/item.dart';
@@ -20,6 +21,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+
  double totalAmount;
  @override
   void initState() {
@@ -39,11 +41,11 @@ class _CartPageState extends State<CartPage> {
             }
           else
             {
-              Route route = MaterialPageRoute(builder: (c)=>Address(totalAmount:totalAmount));
+              Route route = MaterialPageRoute(builder: (c)=>Sale());
               Navigator.push(context, route);
             }
         },
-        label: Text("Check Out"),
+        label: Text("Sale"),
         backgroundColor: Colors.pinkAccent,
         icon: Icon(Icons.navigate_next),
       ),
@@ -57,11 +59,17 @@ class _CartPageState extends State<CartPage> {
                 return Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Center(
-                    child: cartProvider.count==0
-                    ? Container()
-                        : Text("Total Price : ${amountProvider.totalAmount.toString()}",
+                    child:
+                         InkWell(
+                      onTap: (){
+                        Route route = MaterialPageRoute(builder: (c)=>Address(totalAmount: totalAmount,));
+                        Navigator.push(context, route);
+                      },
+                          child: Text("Total Price : ${amountProvider.totalAmount.toString()}"+"  VND"
+                              "CHECK OUT",
                     style: TextStyle(color: Colors.black,fontSize: 20.0,fontWeight: FontWeight.w500),
                     ),
+                        ),
                   ),
                 );
             }
@@ -76,12 +84,40 @@ class _CartPageState extends State<CartPage> {
               )
                   :snapshot.data.documents.length==0
                   ? beginBuildingCart()
-                  :SliverList(
-                delegate: SliverChildBuilderDelegate(
-                    (context,index){
-                      ItemModel model = ItemModel.fromJson(snapshot.data.documents[index].data);
-                      String iditem = snapshot.data.documents[index].documentID;
+                         :SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                          (context,index){
+                            ItemModel model = ItemModel.fromJson(snapshot.data.documents[index].data);
+                            String iditem = snapshot.data.documents[index].documentID;
+                            if (index ==0)
+                              {
+                                String sales = EcommerceApp.sharedPreferences.getString(EcommerceApp.userSale);
+                              double sale = double.tryParse(sales);
+                              sale = sale/100;
+                              double salenow = 1-sale;
+                                totalAmount = 0;
+                                totalAmount = (model.price*model.quantity + totalAmount)*salenow;
+                              }
+                            else
+                              {
+                                String sales = EcommerceApp.sharedPreferences.getString(EcommerceApp.userSale);
+                              double sale = double.tryParse(sales);
+                              sale = sale/100;
+                              double salenow = 1-sale;
+                              totalAmount = (model.price*model.quantity + totalAmount)*salenow;
+                            }
+                            if(snapshot.data.documents.length-1 ==index){
+                              WidgetsBinding.instance.addPostFrameCallback((t) {
+                                Provider.of<TotalAmount>(context,listen: false).display(totalAmount);
+                              });
+                            }
+                            return sourceInfoCart(model,context,iditem,removeCartFunction: ()=> removeItemFromUserCart(model.id));
+                          },
+                        childCount:  snapshot.hasData ? snapshot.data.documents.length : 0,
+                    ),
+                  );
 
+<<<<<<< Updated upstream
                       if (index ==0)
                         {
                           totalAmount = 0;
@@ -101,6 +137,8 @@ class _CartPageState extends State<CartPage> {
                   childCount:  snapshot.hasData ? snapshot.data.documents.length : 0,
                 ),
               );
+=======
+>>>>>>> Stashed changes
             }
           )
         ],
@@ -260,6 +298,10 @@ Widget sourceInfoCart(ItemModel model, BuildContext context,String iditem,
                             icon: Icon(Icons.plus_one,color: Colors.pinkAccent,),
                             onPressed: (){
                               quantity = quantity+1;
+<<<<<<< Updated upstream
+=======
+                              updatequan(iditem, quantity);
+>>>>>>> Stashed changes
                             },
                           )
                       ),
@@ -270,6 +312,10 @@ Widget sourceInfoCart(ItemModel model, BuildContext context,String iditem,
                             onPressed: (){
                               if(quantity>=1)
                               {   quantity = quantity-1;
+<<<<<<< Updated upstream
+=======
+                              updatequan(iditem, quantity);
+>>>>>>> Stashed changes
                               }
                             },
                           )

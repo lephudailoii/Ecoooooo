@@ -41,7 +41,9 @@ class OrderDetails extends StatelessWidget {
                   ? Container(
                 child: Column(
                   children: [
-                    StatusBanner(status: dataMap[EcommerceApp.isSuccess],),
+                    StatusBanner(status: dataMap[EcommerceApp.isSuccess],
+                    step: dataMap[EcommerceApp.step],
+                    ),
                     SizedBox(height: 10.0,),
                     Padding(
                       padding: EdgeInsets.all(4.0),
@@ -94,7 +96,11 @@ class OrderDetails extends StatelessWidget {
                             ? ShippingDetails(model: AddressModel.fromJson(snap.data.data),status:dataMap[EcommerceApp.isSuccess])
                             : Center(child: circularProgress(),);
                       },
+<<<<<<< Updated upstream
                     )
+=======
+                    ),
+>>>>>>> Stashed changes
                   ],
                 ),
               )
@@ -180,6 +186,10 @@ class ShippingDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,6 +322,19 @@ class ShippingDetails extends StatelessWidget {
   }
   confirmedUserOrderReceived(BuildContext context,String mOrderId)
   {
+<<<<<<< Updated upstream
+=======
+    final itemRef = Firestore.instance.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection(EcommerceApp.collectionHistoryUser);
+    itemRef.document(mOrderId).updateData({
+      EcommerceApp.step:"3"
+    }
+    );
+    final itemRefad = Firestore.instance.collection(EcommerceApp.collectionHistoryAdmin);
+    itemRefad.document(mOrderId).updateData({
+      EcommerceApp.step:"3"
+    }
+    );
+>>>>>>> Stashed changes
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionOrders)
         .document(mOrderId)
@@ -330,6 +353,16 @@ class ShippingDetails extends StatelessWidget {
     }
   delete(BuildContext context,String mOrderId,String orderBy)
   {
+    final itemRef = Firestore.instance.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection(EcommerceApp.collectionHistoryUser);
+    itemRef.document(mOrderId).updateData({
+        EcommerceApp.step:"2"
+    }
+    );
+    final itemRefad = Firestore.instance.collection(EcommerceApp.collectionHistoryAdmin);
+    itemRefad.document(mOrderId).updateData({
+      EcommerceApp.step:"2"
+    }
+    );
     EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
         .document(orderBy)
         .collection(EcommerceApp.collectionOrders)
@@ -340,8 +373,11 @@ class ShippingDetails extends StatelessWidget {
         .collection(EcommerceApp.collectionHistoryUser)
         .document(mOrderId)
         .delete();
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     getOrderId = "";
     Route route = MaterialPageRoute(builder: (c)=>SplashScreen());
     Navigator.pushReplacement(context, route);

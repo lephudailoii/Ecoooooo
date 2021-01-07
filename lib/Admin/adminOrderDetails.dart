@@ -40,7 +40,9 @@ class AdminOrderDetails extends StatelessWidget {
                   ? Container(
                 child: Column(
                   children: [
-                    AdminStatusBanner(status: dataMap[EcommerceApp.isSuccess],),
+                    AdminStatusBanner(status: dataMap[EcommerceApp.isSuccess],
+                      step: dataMap[EcommerceApp.step],
+                    ),
                     SizedBox(height: 10.0,),
                     Padding(
                       padding: EdgeInsets.all(4.0),
@@ -67,7 +69,7 @@ class AdminOrderDetails extends StatelessWidget {
                     FutureBuilder<QuerySnapshot>(
                       future: EcommerceApp.firestore
                           .collection("items")
-                          .where("shortInfo",whereIn: dataMap[EcommerceApp.productID])
+                          .where("id",whereIn: dataMap[EcommerceApp.productID])
                           .getDocuments(),
                       builder: (c,dataSnapshot)
                       {
@@ -108,10 +110,9 @@ class AdminOrderDetails extends StatelessWidget {
 
 class AdminStatusBanner extends StatelessWidget {
 
-
+  final String step;
   final bool status;
-  AdminStatusBanner({Key key,this.status}): super(key: key);
-
+  AdminStatusBanner({Key key,this.status,this.step}): super(key: key);
   @override
   Widget build(BuildContext context) {
     String msg;
@@ -294,6 +295,16 @@ class AdminShippingDetails extends StatelessWidget {
   }
   delete(BuildContext context,String mOrderId,String orderBy)
   {
+    final itemRef = Firestore.instance.collection("users").document(orderBy).collection(EcommerceApp.collectionHistoryUser);
+    itemRef.document(mOrderId).updateData({
+      EcommerceApp.step:"2"
+    }
+    );
+    final itemRefad = Firestore.instance.collection(EcommerceApp.collectionHistoryAdmin);
+    itemRefad.document(mOrderId).updateData({
+      EcommerceApp.step:"2"
+    }
+    );
     EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
         .document(orderBy)
         .collection(EcommerceApp.collectionOrders)

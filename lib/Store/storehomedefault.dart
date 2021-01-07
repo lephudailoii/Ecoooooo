@@ -215,7 +215,7 @@ Widget sourceInfo(ItemModel model, BuildContext context,String iditem,
                            IconButton(
                         icon: Icon(Icons.add_shopping_cart,color: Colors.pinkAccent,),
                         onPressed: (){
-                          checkItemInCart(model.shortInfo, context);
+                          checkItemInCart(model.id, context);
                         },
                       )
                   ),

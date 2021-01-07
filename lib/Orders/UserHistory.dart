@@ -54,7 +54,7 @@ class _MyOrdersState extends State<UserHistory> {
                 return FutureBuilder<QuerySnapshot>(
                   future: Firestore.instance
                       .collection("items")
-                      .where("shortInfo",whereIn: snapshot.data.documents[index].data[EcommerceApp.productID])
+                      .where("id",whereIn: snapshot.data.documents[index].data[EcommerceApp.productID])
                       .getDocuments(),
                   builder: (c,snap){
                     return snap.hasData

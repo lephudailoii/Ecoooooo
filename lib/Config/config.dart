@@ -18,7 +18,7 @@ class EcommerceApp
    static String collectionHistoryAdmin = "historyAdmin";
    static String collectionComment = "comment";
    static String userCartList = 'userCart';
-   static String userCartListQuantity='userCartQuantity' ;
+   static String adUser='aduser' ;
    static String collectiondashBoard ='dashBoard';
    static String subCollectionAddress = 'userAddress';
 

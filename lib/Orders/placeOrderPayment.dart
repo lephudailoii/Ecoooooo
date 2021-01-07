@@ -152,19 +152,57 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID:widget.addressId,
       EcommerceApp.totalAmount:widget.totalAmount,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+<<<<<<< Updated upstream
       EcommerceApp.productID:EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList),
       EcommerceApp.paymentDetails:widget.paymentdetail,
       EcommerceApp.orderTime: DateTime.now().millisecondsSinceEpoch.toString(),
       EcommerceApp.isSuccess:false,
     }).whenComplete(() => {
+=======
+      EcommerceApp.productID: EcommerceApp.sharedPreferences.getStringList(
+          EcommerceApp.userCartList),
+      EcommerceApp.paymentDetails: widget.paymentdetail,
+      EcommerceApp.orderTime: DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString(),
+      EcommerceApp.isSuccess: false,
+      EcommerceApp.step:"1",
+    }).whenComplete(() =>
+    {
+
+>>>>>>> Stashed changes
       emptyCartNow()
     });
 
 
   }
+<<<<<<< Updated upstream
   emptyCartNow(){
     EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, ["garbageValue"]);
     List tempList = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+=======
+    deletecart(List<String> list) async{
+    for(
+    var id in list
+    ){
+        EcommerceApp.firestore.collection("users")
+            .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+            .collection(EcommerceApp.userCartList)
+            .document(id)
+            .delete();
+    }
+
+    }
+  emptyCartNow() {
+    List<String> a =  EcommerceApp.sharedPreferences.getStringList(
+        EcommerceApp.userCartList);
+    deletecart(a);
+    EcommerceApp.sharedPreferences.setStringList(
+        EcommerceApp.userCartList, ["garbageValue"]);
+    List tempList = EcommerceApp.sharedPreferences.getStringList(
+        EcommerceApp.userCartList);
+>>>>>>> Stashed changes
     Firestore.instance.collection("users")
     .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
     .updateData({
@@ -177,6 +215,7 @@ class _PaymentPageState extends State<PaymentPage> {
     Route route = MaterialPageRoute(builder: (c)=>SplashScreen());
     Navigator.pushReplacement(context, route);
   }
+<<<<<<< Updated upstream
   
 
 
@@ -193,6 +232,47 @@ class _PaymentPageState extends State<PaymentPage> {
 
 
   Future writeOrderDetailsForAdmin(Map<String, dynamic>data) async{
+=======
+
+
+
+  Future writeDashBoard(Map<String, dynamic>data) async {
+      int month = DateTime
+          .now()
+          .month;
+      int year = DateTime
+          .now()
+          .year;
+      String smonth = month.toString();
+      String syear = year.toString();
+      String a = smonth + syear;
+      await EcommerceApp.firestore.collection(EcommerceApp.collectiondashBoard)
+          .document(a)
+          .updateData(data);
+  }
+  Future writePoint() async {
+    String pointnows = EcommerceApp.sharedPreferences.getString(EcommerceApp.Point);
+    double pointnow = double.tryParse(pointnows);
+    double cash = widget.totalAmount;
+     pointnow = cash+pointnow;
+     if(pointnow>=1000000)
+       {
+         await EcommerceApp.firestore.collection('users')
+             .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+             .updateData({EcommerceApp.userLevel:'Friendly Customer'});
+       }
+     String pointnew = pointnow.toString();
+    await EcommerceApp.firestore.collection('users')
+        .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .updateData({EcommerceApp.Point:pointnew});
+
+  }
+
+
+
+  Future writeOrderDetailsForAdmin(Map<String, dynamic>data) async {
+
+>>>>>>> Stashed changes
     await EcommerceApp.firestore.collection(EcommerceApp.collectionOrders)
         .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)+data['orderTime'])
         .setData(data);
@@ -210,6 +290,7 @@ class _PaymentPageState extends State<PaymentPage> {
             data['orderTime'])
         .setData(data);
     await EcommerceApp.firestore.collection(EcommerceApp.collectionHistoryAdmin)
+<<<<<<< Updated upstream
         .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)+data['orderTime'])
         .setData(data);
    }
@@ -247,6 +328,20 @@ class _PaymentPageState extends State<PaymentPage> {
   //       .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)+data['orderTime'])
   //       .setData(data);
   // }
+=======
+        .document(
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+            data['orderTime'])
+        .setData(data);
+    await EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
+        .document(
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .collection(EcommerceApp.collectionHistoryUser)
+        .document(
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+            data['orderTime'])
+        .setData(data);
+>>>>>>> Stashed changes
 
 }
 

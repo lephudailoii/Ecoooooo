@@ -56,9 +56,8 @@ class _CartPageDefaultState extends State<CartPageDefault> {
               return Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Center(
-                  child: cartProvider.count==0
-                      ? Container()
-                      : Text("Total Price : ${amountProvider.totalAmount.toString()}",
+                  child:
+                       Text("Total Price : ${amountProvider.totalAmount.toString()}",
                     style: TextStyle(color: Colors.black,fontSize: 20.0,fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -67,7 +66,7 @@ class _CartPageDefaultState extends State<CartPageDefault> {
             ),
           ),
           StreamBuilder<QuerySnapshot>(
-              stream: EcommerceApp.firestore.collection("items").where("shortInfo",whereIn: EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList)).snapshots(),
+              stream: EcommerceApp.firestore.collection("items").where("id",whereIn: EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList)).snapshots(),
               builder: (context,snapshot){
                 return !snapshot.hasData
                     ? SliverToBoxAdapter(

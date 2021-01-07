@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Admin/uploadItems.dart';
 import 'package:e_shop/Authentication/authenication.dart';
+import 'package:e_shop/Config/config.dart';
 import 'package:e_shop/Widgets/customTextField.dart';
 import 'package:e_shop/DialogBox/errorDialog.dart';
 import 'package:flutter/material.dart';
@@ -138,9 +139,9 @@ class _AdminSignInScreenState extends State<AdminSignInScreen>
       ),
     );
   }
-  loginAdmin(){
+  loginAdmin()async{
       Firestore.instance.collection("admins").getDocuments().then((snapshot){
-        snapshot.documents.forEach((result) {
+        snapshot.documents.forEach((result) async {
           if(result.data["id"]!= _adminIDTextEditingController.text.trim())
             {
               Scaffold.of(context).showSnackBar(SnackBar(content: Text("Your id is not correct"),));
@@ -153,6 +154,7 @@ class _AdminSignInScreenState extends State<AdminSignInScreen>
           }
           else
             {
+            await EcommerceApp.sharedPreferences.setStringList(EcommerceApp.adUser,["garbageValue"] );
               Scaffold.of(context).showSnackBar(SnackBar(content: Text("Welcome Dear Admin, "+result.data["name"]),));
 
               setState(() {

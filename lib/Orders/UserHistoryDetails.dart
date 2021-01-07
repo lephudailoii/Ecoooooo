@@ -41,7 +41,8 @@ class UserHistoryDetails extends StatelessWidget {
                   ? Container(
                 child: Column(
                   children: [
-                    StatusBanner(status: dataMap[EcommerceApp.isSuccess],),
+                    StatusBanner(status: dataMap[EcommerceApp.isSuccess],
+                    step: dataMap[EcommerceApp.step],),
                     SizedBox(height: 10.0,),
                     Padding(
                       padding: EdgeInsets.all(4.0),
@@ -68,7 +69,7 @@ class UserHistoryDetails extends StatelessWidget {
                     FutureBuilder<QuerySnapshot>(
                       future: EcommerceApp.firestore
                           .collection("items")
-                          .where("shortInfo",whereIn: dataMap[EcommerceApp.productID])
+                          .where("id",whereIn: dataMap[EcommerceApp.productID])
                           .getDocuments(),
                       builder: (c,dataSnapshot)
                       {
@@ -111,14 +112,22 @@ class UserHistoryDetails extends StatelessWidget {
 
 class StatusBanner extends StatelessWidget {
   final bool status;
-  StatusBanner({Key key,this.status}): super(key: key);
-
+  final String step;
+  StatusBanner({Key key,this.status,this.step}): super(key: key);
   @override
   Widget build(BuildContext context) {
-    String msg;
+    String state;
     IconData iconData;
+    if(step =="1")
+      {
+        state ="Order is being processing";
+
+      }
+     else if(step =="2")
+     {state ="Order have been deleted";}
+    else
+      {state ="Order have been completed";}
     status ? iconData = Icons.done : iconData = Icons.cancel;
-    status ? msg = "Successful" : msg = "Unsuccessful";
     return Container(
       decoration: new BoxDecoration(
           gradient: new LinearGradient(
@@ -145,7 +154,7 @@ class StatusBanner extends StatelessWidget {
             ),
           ),
           SizedBox(width: 20.0,),
-          Text("Order Placed" + msg ,
+          Text("State : " + state ,
             style: TextStyle(color: Colors.white),
           ),
           SizedBox(width: 5.0,),

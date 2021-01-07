@@ -40,7 +40,8 @@ class AdminOrderDetailsHis extends StatelessWidget {
                   ? Container(
                 child: Column(
                   children: [
-                    AdminStatusBanner(status: dataMap[EcommerceApp.isSuccess],),
+                    AdminStatusBanner(status: dataMap[EcommerceApp.isSuccess],
+                      step: dataMap[EcommerceApp.step],),
                     SizedBox(height: 10.0,),
                     Padding(
                       padding: EdgeInsets.all(4.0),
@@ -67,7 +68,7 @@ class AdminOrderDetailsHis extends StatelessWidget {
                     FutureBuilder<QuerySnapshot>(
                       future: EcommerceApp.firestore
                           .collection("items")
-                          .where("shortInfo",whereIn: dataMap[EcommerceApp.productID])
+                          .where("id",whereIn: dataMap[EcommerceApp.productID])
                           .getDocuments(),
                       builder: (c,dataSnapshot)
                       {
@@ -108,16 +109,24 @@ class AdminOrderDetailsHis extends StatelessWidget {
 
 class AdminStatusBanner extends StatelessWidget {
 
-
+  final String step;
   final bool status;
-  AdminStatusBanner({Key key,this.status}): super(key: key);
+  AdminStatusBanner({Key key,this.status,this.step}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String msg;
+    String state;
     IconData iconData;
+    if(step =="1")
+    {
+      state ="Order is being processing";
+
+    }
+    else if(step =="2")
+    {state ="Order have been deleted";}
+    else
+    {state ="Order have been completed";}
     status ? iconData = Icons.done : iconData = Icons.cancel;
-    status ? msg = "Successful" : msg = "Unsuccessful";
 
     return Container(
       decoration: new BoxDecoration(
@@ -145,7 +154,7 @@ class AdminStatusBanner extends StatelessWidget {
             ),
           ),
           SizedBox(width: 20.0,),
-          Text("Order Shipped" ,style: TextStyle(color: Colors.white),
+          Text("Order Shipped : "+state ,style: TextStyle(color: Colors.white),
           ),
           SizedBox(width: 5.0,),
           CircleAvatar(
