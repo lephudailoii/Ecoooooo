@@ -5,8 +5,6 @@ class ErrorAlertDialog extends StatelessWidget
 {
   final String message;
   const ErrorAlertDialog({Key key, this.message}) : super(key: key);
-
-
   @override
   Widget build(BuildContext context)
   {

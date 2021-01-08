@@ -130,7 +130,16 @@ class MyDrawer extends StatelessWidget {
                   title: Text("Log out", style: TextStyle(color: Colors.white),),
                   leading: Icon(Icons.exit_to_app,color:Colors.white,),
                   onTap: (){
-                    EcommerceApp.auth.signOut().then((c){
+                    EcommerceApp.auth.signOut().then((c) async {
+                      await EcommerceApp.setSharePrefercence("uid", "");
+                      await EcommerceApp.setSharePrefercence(EcommerceApp.Point,"");
+                      await EcommerceApp.setSharePrefercence(EcommerceApp.userLevel, "");
+                      await EcommerceApp.setSharePrefercence(EcommerceApp.userSale,"0");
+                      await EcommerceApp.setSharePrefercence(EcommerceApp.userEmail, "");
+                      await EcommerceApp.setSharePrefercence(EcommerceApp.userName, "");
+
+                      await EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList,["garbageValue"] );
+
                       Route route = MaterialPageRoute(builder: (c)=> AuthenticScreen());
                       Navigator.pushReplacement(context, route);
 

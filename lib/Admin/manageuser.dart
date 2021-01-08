@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Admin/creatsale.dart';
 import 'package:e_shop/BankCard/bcard.dart';
 import 'package:e_shop/Config/config.dart';
+import 'package:e_shop/Counters/userchanger.dart';
 import 'package:e_shop/Models/address.dart';
 import 'package:e_shop/Models/usermodel.dart';
 import 'package:e_shop/Orders/placeOrderPayment.dart';
@@ -118,7 +119,7 @@ class _UserCardState extends State<UserCard> {
     double screenWidth = MediaQuery.of(context).size.width;
     return InkWell(
       onTap: (){
-        Provider.of<AddressChanger>(context,listen: false).displayResult(widget.value);
+        Provider.of<UserChanger>(context,listen: false).displayResult(widget.value);
       },
       child: Card(
         color: Colors.pinkAccent.withOpacity(0.4),
@@ -131,7 +132,7 @@ class _UserCardState extends State<UserCard> {
                   value: widget.value,
                   activeColor: Colors.pink,
                   onChanged: (val){
-                    Provider.of<AddressChanger>(context,listen: false).displayResult(val);
+                    Provider.of<UserChanger>(context,listen: false).displayResult(val);
                   },
 
                 ),
@@ -178,7 +179,6 @@ class _UserCardState extends State<UserCard> {
               message: "Chose",
               onPressed: ()
              {  List<String> list = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.adUser);
-
              String show = widget.model.name;
              String id = widget.model.id;
              list.add(id);

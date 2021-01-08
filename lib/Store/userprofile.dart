@@ -30,9 +30,9 @@ class _UserProfileState extends State<UserProfile> {
           Route route = MaterialPageRoute(builder: (c)=>ChangePassword());
           Navigator.pushReplacement(context, route);
         },
-        label: Text("Back"),
+        label: Text("Change Paword"),
         backgroundColor: Colors.pinkAccent,
-        icon: Icon(Icons.arrow_back_sharp),
+        icon: Icon(Icons.change_history),
       ),
       appBar: AppBar(
         flexibleSpace : Container(
@@ -158,6 +158,32 @@ class _UserProfileState extends State<UserProfile> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(EcommerceApp.sharedPreferences.getString(EcommerceApp.userEmail), style: TextStyle(color: Colors.white70),),
+                    ),
+                  ), decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20)),border: Border.all(width: 1.0, color: Colors.white70)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 25, 20, 4),
+                child: Container(
+                  height: 60,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(EcommerceApp.sharedPreferences.getString(EcommerceApp.Point), style: TextStyle(color: Colors.white70),),
+                    ),
+                  ), decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20)),border: Border.all(width: 1.0, color: Colors.white70)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 5, 20, 4),
+                child: Container(
+                  height: 60,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(EcommerceApp.sharedPreferences.getString(EcommerceApp.userLevel), style: TextStyle(color: Colors.white70),),
                     ),
                   ), decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20)),border: Border.all(width: 1.0, color: Colors.white70)),
                 ),

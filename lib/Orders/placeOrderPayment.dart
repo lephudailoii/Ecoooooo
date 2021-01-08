@@ -36,60 +36,67 @@ class _PaymentPageState extends State<PaymentPage> {
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   new FlutterLocalNotificationsPlugin();
-  var initializationSettinggsAndroid ;
+  var initializationSettinggsAndroid;
+
   var initializationSettinggsIOS;
   var initializationSettinggs;
 
 
-  
-  void shownotification() async{
+  void shownotification() async {
     await demonotification();
-
   }
-  Future<void> demonotification()async{
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails("channelID","channelname","channeldes",importance: Importance.max,priority: Priority.high,ticker: 'test ticker');
+
+  Future<void> demonotification() async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        "channelID", "channelname", "channeldes", importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'test ticker');
     var iOSChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,iOS: iOSChannelSpecifics );
-    await flutterLocalNotificationsPlugin.show(0, 'Dat Hang Thanh Cong', 'Xin chuc mung ban da dat hang thanh cong , chung toi se kiem tra va giao hang cho ban som nhat',
-        platformChannelSpecifics,payload: 'test payload');
+        android: androidPlatformChannelSpecifics, iOS: iOSChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(0, 'Dat Hang Thanh Cong',
+        'Xin chuc mung ban da dat hang thanh cong , chung toi se kiem tra va giao hang cho ban som nhat',
+        platformChannelSpecifics, payload: 'test payload');
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    initializationSettinggsAndroid = new AndroidInitializationSettings('icon_app');
-    initializationSettinggsIOS = new IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    initializationSettinggs =  new InitializationSettings(android: initializationSettinggsAndroid,iOS: initializationSettinggsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettinggs,onSelectNotification:onSelectNotification );
-
-   
+    initializationSettinggsAndroid =
+    new AndroidInitializationSettings('icon_app');
+    initializationSettinggsIOS = new IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    initializationSettinggs = new InitializationSettings(
+        android: initializationSettinggsAndroid,
+        iOS: initializationSettinggsIOS);
+    flutterLocalNotificationsPlugin.initialize(
+        initializationSettinggs, onSelectNotification: onSelectNotification);
   }
-  Future onSelectNotification(String payload) async{
-    if (payload != null)
-      {
-        debugPrint('Notification payload: $payload');
-      }
-  }
-  Future onDidReceiveLocalNotification( int id , String title , String body , String payload
 
-      ) async{
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('Notification payload: $payload');
+    }
+  }
+
+  Future onDidReceiveLocalNotification(int id, String title, String body,
+      String payload) async {
     await showDialog(
-      context: context,
-      builder: (BuildContext context)=> CupertinoAlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: <Widget>[
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              child: Text("OK"),
+        context: context,
+        builder: (BuildContext context) =>
+            CupertinoAlertDialog(
+              title: Text(title),
+              content: Text(body),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  child: Text("OK"),
+                )
+              ],
             )
-        ],
-      )
     );
   }
-
-
 
 
   @override
@@ -98,10 +105,10 @@ class _PaymentPageState extends State<PaymentPage> {
       child: Container(
         decoration: new BoxDecoration(
             gradient: new LinearGradient(
-              colors: [Colors.pink,Colors.lightGreenAccent],
+              colors: [Colors.pink, Colors.lightGreenAccent],
               begin: const FractionalOffset(0.0, 0.0),
-              end:  const FractionalOffset(1.0, 0.0),
-              stops: [0.0,1.0],
+              end: const FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
               tileMode: TileMode.clamp,
             )
         ),
@@ -119,8 +126,8 @@ class _PaymentPageState extends State<PaymentPage> {
                 textColor: Colors.white,
                 padding: EdgeInsets.all(8.0),
                 splashColor: Colors.deepOrange,
-                onPressed: ()=>addOrderDetails(),
-                child: Text("PLace Order",style: TextStyle(fontSize: 30.0),),
+                onPressed: () => addOrderDetails(),
+                child: Text("PLace Order", style: TextStyle(fontSize: 30.0),),
               )
             ],
           ),
@@ -128,37 +135,12 @@ class _PaymentPageState extends State<PaymentPage> {
       ),
     );
   }
-    getdatadashboard(){
-      int month = DateTime.now().month;
-      int year = DateTime.now().year;
-      String smonth =month.toString();
-      String syear =year.toString();
-      String b = smonth+ syear;
-      FutureBuilder<DocumentSnapshot>(
-        future: EcommerceApp.firestore
-            .collection(EcommerceApp.collectiondashBoard)
-            .document("122020")
-            .get(),
-        builder: (c,snap)
-        {
-          return snap.hasData
-              ? DashBoardCard(model: DashBoardModel.fromJson(snap.data.data),)
-              : Center(child: circularProgress(),);
-        },
-      );
-    }
-  addOrderDetails(){
+
+  addOrderDetails() {
     writeOrderDetailsForAdmin({
-      EcommerceApp.addressID:widget.addressId,
-      EcommerceApp.totalAmount:widget.totalAmount,
+      EcommerceApp.addressID: widget.addressId,
+      EcommerceApp.totalAmount: widget.totalAmount,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
-<<<<<<< Updated upstream
-      EcommerceApp.productID:EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList),
-      EcommerceApp.paymentDetails:widget.paymentdetail,
-      EcommerceApp.orderTime: DateTime.now().millisecondsSinceEpoch.toString(),
-      EcommerceApp.isSuccess:false,
-    }).whenComplete(() => {
-=======
       EcommerceApp.productID: EcommerceApp.sharedPreferences.getStringList(
           EcommerceApp.userCartList),
       EcommerceApp.paymentDetails: widget.paymentdetail,
@@ -167,119 +149,95 @@ class _PaymentPageState extends State<PaymentPage> {
           .millisecondsSinceEpoch
           .toString(),
       EcommerceApp.isSuccess: false,
-      EcommerceApp.step:"1",
+      EcommerceApp.step: "1",
+
     }).whenComplete(() =>
     {
-
->>>>>>> Stashed changes
       emptyCartNow()
     });
-
-
+    writeDashBoard(({ EcommerceApp.totalAmount: widget.totalAmount,
+    }));
   }
-<<<<<<< Updated upstream
-  emptyCartNow(){
-    EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, ["garbageValue"]);
-    List tempList = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
-=======
-    deletecart(List<String> list) async{
-    for(
-    var id in list
-    ){
-        EcommerceApp.firestore.collection("users")
-            .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-            .collection(EcommerceApp.userCartList)
-            .document(id)
-            .delete();
-    }
 
-    }
   emptyCartNow() {
-    List<String> a =  EcommerceApp.sharedPreferences.getStringList(
-        EcommerceApp.userCartList);
-    deletecart(a);
-    EcommerceApp.sharedPreferences.setStringList(
-        EcommerceApp.userCartList, ["garbageValue"]);
     List tempList = EcommerceApp.sharedPreferences.getStringList(
         EcommerceApp.userCartList);
->>>>>>> Stashed changes
+    deletecart(tempList);
+    EcommerceApp.sharedPreferences.setStringList(
+        EcommerceApp.userCartList, ["garbageValue"]);
+    List tempList2 = EcommerceApp.sharedPreferences.getStringList(
+        EcommerceApp.userCartList);
     Firestore.instance.collection("users")
-    .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-    .updateData({
-      EcommerceApp.userCartList: tempList,
-    }).then((value){
-      EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, tempList);
-      Provider.of<CartItemCounter>(context,listen: false).displayResult();
-    });
-      shownotification();
-    Route route = MaterialPageRoute(builder: (c)=>SplashScreen());
+        .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .updateData({
+    EcommerceApp.userCartList: tempList2});
+    Provider.of<CartItemCounter>(context, listen: false).displayResult();
+    shownotification();
+    Route route = MaterialPageRoute(builder: (c) => SplashScreen());
     Navigator.pushReplacement(context, route);
   }
-<<<<<<< Updated upstream
-  
 
-
-  Future writeDashBoard(Map<String, dynamic>data) async{
-    int month = DateTime.now().month;
-    int year = DateTime.now().year;
-    String smonth =month.toString();
-    String syear =year.toString();
-    String a = smonth+ syear;
-    await EcommerceApp.firestore.collection(EcommerceApp.collectiondashBoard)
-        .document(a)
-        .updateData(data);
+  deletecart(List<String> list) async {
+    for (
+    var id in list
+    ) {
+      EcommerceApp.firestore.collection("users")
+          .document(
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .collection(EcommerceApp.userCartList)
+          .document(id)
+          .delete();
+    }
   }
-
-
-  Future writeOrderDetailsForAdmin(Map<String, dynamic>data) async{
-=======
-
-
 
   Future writeDashBoard(Map<String, dynamic>data) async {
-      int month = DateTime
-          .now()
-          .month;
-      int year = DateTime
-          .now()
-          .year;
-      String smonth = month.toString();
-      String syear = year.toString();
-      String a = smonth + syear;
-      await EcommerceApp.firestore.collection(EcommerceApp.collectiondashBoard)
-          .document(a)
-          .updateData(data);
+    int month = DateTime
+        .now()
+        .month;
+    int year = DateTime
+        .now()
+        .year;
+    String smonth = month.toString();
+    String syear = year.toString();
+    String a = smonth + syear;
+    await EcommerceApp.firestore.collection(EcommerceApp.collectiondashBoard)
+        .document(a)
+        .setData(data);
   }
+
   Future writePoint() async {
-    String pointnows = EcommerceApp.sharedPreferences.getString(EcommerceApp.Point);
+    String pointnows = EcommerceApp.sharedPreferences.getString(
+        EcommerceApp.Point);
     double pointnow = double.tryParse(pointnows);
     double cash = widget.totalAmount;
-     pointnow = cash+pointnow;
-     if(pointnow>=1000000)
-       {
-         await EcommerceApp.firestore.collection('users')
-             .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-             .updateData({EcommerceApp.userLevel:'Friendly Customer'});
-       }
-     String pointnew = pointnow.toString();
+    pointnow = cash + pointnow;
+    if (pointnow >= 1000000) {
+      await EcommerceApp.firestore.collection('users')
+          .document(
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .updateData({EcommerceApp.userLevel: 'Friendly Customer'});
+    }
+    String pointnew = pointnow.toString();
     await EcommerceApp.firestore.collection('users')
-        .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-        .updateData({EcommerceApp.Point:pointnew});
-
+        .document(
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .updateData({EcommerceApp.Point: pointnew});
   }
-
 
 
   Future writeOrderDetailsForAdmin(Map<String, dynamic>data) async {
-
->>>>>>> Stashed changes
     await EcommerceApp.firestore.collection(EcommerceApp.collectionOrders)
-        .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)+data['orderTime'])
+        .document(
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+            data['orderTime'])
         .setData(data);
-    await  EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
-        .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+    await EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
+        .document(
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
         .collection(EcommerceApp.collectionOrders)
-        .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)+data['orderTime'])
+        .document(
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+            data['orderTime'])
         .setData(data);
     await EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
         .document(
@@ -290,60 +248,11 @@ class _PaymentPageState extends State<PaymentPage> {
             data['orderTime'])
         .setData(data);
     await EcommerceApp.firestore.collection(EcommerceApp.collectionHistoryAdmin)
-<<<<<<< Updated upstream
-        .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)+data['orderTime'])
-        .setData(data);
-   }
-  // Future writeitem() async{
-  //   List<String> a = new List();
-  //    a = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
-  //   int sl= a.length;
-  //   for(int p=0;p>=sl;p++)
-  //     {
-  //
-  //       FutureBuilder<DocumentSnapshot>(
-  //         future: EcommerceApp.firestore
-  //             .collection("items")
-  //             .document(a[p])
-  //             .get(),
-  //         builder: (c,snap)
-  //         {
-  //           return snap.hasData
-  //               ? {
-  //             ItemModel.fromJson(snap.data.data)}
-  //               : Center(child: circularProgress(),);
-  //         },
-  //       );
-  //       ItemModel model ;
-  //       int quanupdate = model.quantity-1;
-  //       await EcommerceApp.firestore.collection("items")
-  //           .document(a[p])
-  //           .updateData({"quantity":quanupdate});}
-  //     }
-
-
-  // Future writeOrderDetailsForHistoryAdmin(Map<String, dynamic>data) async{
-  //
-  //   await EcommerceApp.firestore.collection(EcommerceApp.collectionHistoryAdmin)
-  //       .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)+data['orderTime'])
-  //       .setData(data);
-  // }
-=======
         .document(
         EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
             data['orderTime'])
         .setData(data);
-    await EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
-        .document(
-        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-        .collection(EcommerceApp.collectionHistoryUser)
-        .document(
-        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
-            data['orderTime'])
-        .setData(data);
->>>>>>> Stashed changes
+  }
+
 
 }
-
-
-

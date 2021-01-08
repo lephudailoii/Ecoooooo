@@ -91,7 +91,7 @@ class _CreatsaleState extends State<Creatsale> {
   }
   saveItemInfo(List<String> iduser){
     String id=_idsaleTextEdittingController.text;
-    String sale = _idsaleTextEdittingController.text;
+    String sale = _saleTextEdittingController.text;
     for(
     var idindex in iduser
     ){

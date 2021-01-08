@@ -21,13 +21,14 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-
- double totalAmount;
- @override
+  double totalAmount;
+  String sales = "";
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     totalAmount =0;
+    sales = EcommerceApp.sharedPreferences.getString(EcommerceApp.userSale);
     Provider.of<TotalAmount>(context,listen: false).display(0);
   }
   @override
@@ -36,14 +37,14 @@ class _CartPageState extends State<CartPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: (){
           if(EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList).length==1)
-            {
-              Fluttertoast.showToast(msg: "your cart is empty");
-            }
+          {
+            Fluttertoast.showToast(msg: "your cart is empty");
+          }
           else
-            {
-              Route route = MaterialPageRoute(builder: (c)=>Sale());
-              Navigator.push(context, route);
-            }
+          {
+            Route route = MaterialPageRoute(builder: (c)=>Sale());
+            Navigator.push(context, route);
+          }
         },
         label: Text("Sale"),
         backgroundColor: Colors.pinkAccent,
@@ -54,134 +55,127 @@ class _CartPageState extends State<CartPage> {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: Consumer2<TotalAmount,CartItemCounter>(builder: (context,amountProvider,cartProvider,c)
-            {
-                return Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child:
-                         InkWell(
-                      onTap: (){
-                        Route route = MaterialPageRoute(builder: (c)=>Address(totalAmount: totalAmount,));
-                        Navigator.push(context, route);
-                      },
-                          child: Text("Total Price : ${amountProvider.totalAmount.toString()}"+"  VND"
-                              "CHECK OUT",
-                    style: TextStyle(color: Colors.black,fontSize: 20.0,fontWeight: FontWeight.w500),
-                    ),
+            child: Consumer2<TotalAmount, CartItemCounter>(
+                builder: (context, amountProvider, cartProvider, c) {
+                  return Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child:
+                      InkWell(
+                        onTap: () {
+                          Route route = MaterialPageRoute(builder: (c) =>
+                              Address(totalAmount: totalAmount,));
+                          Navigator.push(context, route);
+                        },
+                        child: Text("Total Price : ${amountProvider.totalAmount
+                            .toString()}" + "  VND"+"/n"
+                            "CHECK OUT",
+                          style: TextStyle(color: Colors.black,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w500),
                         ),
-                  ),
-                );
-            }
+                      ),
+                    ),
+                  );
+                }
             ),
           ),
           StreamBuilder<QuerySnapshot>(
-            stream: EcommerceApp.firestore.collection("items").where("id",whereIn: EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList)).snapshots(),
-            builder: (context,snapshot){
-              return !snapshot.hasData
-                  ? SliverToBoxAdapter(
-                child: Center(child: circularProgress(),),
-              )
-                  :snapshot.data.documents.length==0
-                  ? beginBuildingCart()
-                         :SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                          (context,index){
-                            ItemModel model = ItemModel.fromJson(snapshot.data.documents[index].data);
-                            String iditem = snapshot.data.documents[index].documentID;
-                            if (index ==0)
-                              {
-                                String sales = EcommerceApp.sharedPreferences.getString(EcommerceApp.userSale);
-                              double sale = double.tryParse(sales);
-                              sale = sale/100;
-                              double salenow = 1-sale;
-                                totalAmount = 0;
-                                totalAmount = (model.price*model.quantity + totalAmount)*salenow;
-                              }
-                            else
-                              {
-                                String sales = EcommerceApp.sharedPreferences.getString(EcommerceApp.userSale);
-                              double sale = double.tryParse(sales);
-                              sale = sale/100;
-                              double salenow = 1-sale;
-                              totalAmount = (model.price*model.quantity + totalAmount)*salenow;
-                            }
-                            if(snapshot.data.documents.length-1 ==index){
-                              WidgetsBinding.instance.addPostFrameCallback((t) {
-                                Provider.of<TotalAmount>(context,listen: false).display(totalAmount);
-                              });
-                            }
-                            return sourceInfoCart(model,context,iditem,removeCartFunction: ()=> removeItemFromUserCart(model.id));
-                          },
-                        childCount:  snapshot.hasData ? snapshot.data.documents.length : 0,
-                    ),
-                  );
-
-<<<<<<< Updated upstream
-                      if (index ==0)
-                        {
-                          totalAmount = 0;
-                          totalAmount = model.price + totalAmount;
-                        }
-                      else
-                        {
-                        totalAmount = model.price + totalAmount;
+              stream: EcommerceApp.firestore.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection("userCart").snapshots(),
+              builder: (context, snapshot) {
+                return !snapshot.hasData
+                    ? SliverToBoxAdapter(
+                  child: Center(child: circularProgress(),),
+                )
+                    : snapshot.data.documents.length == 0
+                    ? beginBuildingCart()
+                    : SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                      ItemModel model = ItemModel.fromJson(
+                          snapshot.data.documents[index].data);
+                      String iditem = snapshot.data.documents[index].documentID;
+                      double sale = double.tryParse(sales);
+                      sale = sale / 100;
+                      double salenow = 1 - sale;
+                      if (index == 0) {
+                        totalAmount = 0;
+                        totalAmount =
+                            (model.price * model.quantity + totalAmount)
+                                ;
                       }
-                      if(snapshot.data.documents.length-1 ==index){
+                      else {
+                        totalAmount =
+                            (model.price * model.quantity + totalAmount) ;
+                      }
+                      if (snapshot.data.documents.length - 1 == index) {
+                        totalAmount = totalAmount*salenow;
                         WidgetsBinding.instance.addPostFrameCallback((t) {
-                          Provider.of<TotalAmount>(context,listen: false).display(totalAmount);
+                          Provider.of<TotalAmount>(context, listen: false)
+                              .display(totalAmount);
                         });
                       }
-                      return sourceInfoCart(model,context,iditem,removeCartFunction: ()=> removeItemFromUserCart(model.id));
+                      return sourceInfoCart(model, context, iditem,
+                          removeCartFunction: () =>
+                              removeItemFromUserCart(model.id));
                     },
-                  childCount:  snapshot.hasData ? snapshot.data.documents.length : 0,
-                ),
-              );
-=======
->>>>>>> Stashed changes
-            }
+                    childCount: snapshot.hasData ? snapshot.data.documents
+                        .length : 0,
+                  ),
+                );
+              }
           )
         ],
+
       ),
     );
   }
   beginBuildingCart(){
-   return SliverToBoxAdapter(
-     child: Card(
-       color: Theme.of(context).primaryColor.withOpacity(0.5),
-       child: Container(
-         height: 100.0,
-         child: Column(
-           mainAxisAlignment: MainAxisAlignment.center,
-           children: [
-             Icon(Icons.insert_emoticon,color: Colors.white,),
-             Text("Cart is empty"),
-             Text("Start adding item to cart"),
-           ],
-         ),
-       ),
-     ),
-   );
+    return SliverToBoxAdapter(
+      child: Card(
+        color: Theme.of(context).primaryColor.withOpacity(0.5),
+        child: Container(
+          height: 100.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.insert_emoticon,color: Colors.white,),
+              Text("Cart is empty"),
+              Text("Start adding item to cart"),
+            ],
+          ),
+        ),
+      ),
+    );
   }
-  removeItemFromUserCart(String shortInfoAsId){
+  removeItemFromUserCart(String iditem){
     List tempCartList = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
-    tempCartList.remove(shortInfoAsId);
+    EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
+        .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .collection(EcommerceApp.userCartList)
+        .document(iditem)
+        .delete();
+    tempCartList.remove(iditem);
+    EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, tempCartList);
     EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
         .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
         .updateData({
-      EcommerceApp.userCartList: tempCartList,
-    }).then((v){
-      Fluttertoast.showToast(msg: "Item Remove Success");
-      EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, tempCartList);
-      Provider.of<CartItemCounter>(context,listen: false).displayResult();
-      totalAmount =0;
-    });
+        EcommerceApp.userCartList: tempCartList});
+    Fluttertoast.showToast(msg: "Item Remove Success");
+    Provider.of<CartItemCounter>(context,listen: false).displayResult();
+    totalAmount =0;
   }
+}
+updatequan(String iditem,int quan)
+{
+  final itemRef = Firestore.instance.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection(EcommerceApp.userCartList);
+  itemRef.document(iditem).updateData({
+    "quantity": quan,});
 }
 
 Widget sourceInfoCart(ItemModel model, BuildContext context,String iditem,
     {Color background, removeCartFunction}) {
-  int quantity =1;
+  int quantity =model.quantity;
   return InkWell(
     onTap: (){
 
@@ -297,11 +291,9 @@ Widget sourceInfoCart(ItemModel model, BuildContext context,String iditem,
                           child: IconButton(
                             icon: Icon(Icons.plus_one,color: Colors.pinkAccent,),
                             onPressed: (){
-                              quantity = quantity+1;
-<<<<<<< Updated upstream
-=======
+                              quantity = model.quantity+1;
                               updatequan(iditem, quantity);
->>>>>>> Stashed changes
+
                             },
                           )
                       ),
@@ -310,12 +302,10 @@ Widget sourceInfoCart(ItemModel model, BuildContext context,String iditem,
                           child:IconButton(
                             icon: Icon(Icons.exposure_minus_1,color: Colors.pinkAccent,),
                             onPressed: (){
-                              if(quantity>=1)
-                              {   quantity = quantity-1;
-<<<<<<< Updated upstream
-=======
+                              if(quantity>1)
+                              {   quantity = model.quantity-1;
                               updatequan(iditem, quantity);
->>>>>>> Stashed changes
+
                               }
                             },
                           )

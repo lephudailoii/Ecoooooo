@@ -108,16 +108,13 @@ class _DashBoardState extends State<DashBoard> {
 
           ),
           FutureBuilder<DocumentSnapshot>(
-
             future: EcommerceApp.firestore
                 .collection(EcommerceApp.collectiondashBoard)
                 .document(date)
                 .get(),
             builder: (c,snap)
             {
-              return snap.hasData
-                  ? DashBoardCard(model: DashBoardModel.fromJson(snap.data.data),)
-                  : Center(child: circularProgress(),);
+              return snap.data.data != null ? DashBoardCard(model: DashBoardModel.fromJson(snap.data.data)) : noBankCard();
             },
           )
         ],

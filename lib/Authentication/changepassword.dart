@@ -1,6 +1,8 @@
+import 'package:e_shop/Store/storehome.dart';
 import 'package:e_shop/Widgets/customAppBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 class ChangePassword extends StatefulWidget {
@@ -70,11 +72,15 @@ class _ChangePasswordState extends State<ChangePassword> {
 
     //Pass in the password to updatePassword.
     user.updatePassword(password).then((_){
-      print("Your password changed Succesfully ");
+      Fluttertoast.showToast(msg: "Your password changed Succesfully ");
+      Route route = MaterialPageRoute(builder: (c)=> StoreHome());
+      Navigator.pushReplacement(context, route);
     }).catchError((err){
-      print("You can't change the Password" + err.toString());
+      var error = "Repeat password is invalid or Password too least";
+      Fluttertoast.showToast(msg: error);
       //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
     });
+
   }
 }
 class MyTextField extends StatelessWidget {

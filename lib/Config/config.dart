@@ -23,6 +23,9 @@ class EcommerceApp
    static String subCollectionAddress = 'userAddress';
 
    static final String userName = 'name';
+   static final String userSale = 'sale';
+   static final String Point = 'point';
+   static final String userLevel = 'level';
    static final String userEmail = 'email';
    static final String userPhotoUrl = 'photoUrl';
    static final String userUID = 'uid';

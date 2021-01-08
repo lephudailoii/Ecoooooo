@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Store/cart.dart';
@@ -65,8 +66,8 @@ class _StoreHomeState extends State<StoreHome> {
                   child: Stack(
                     children: [
                       Icon(Icons.brightness_1,
-                      size: 20.0,
-                      color: Colors.green,),
+                        size: 20.0,
+                        color: Colors.green,),
                       Positioned(
                         top: 3.0,
                         bottom: 4.0,
@@ -74,7 +75,7 @@ class _StoreHomeState extends State<StoreHome> {
                         child: Consumer<CartItemCounter>(
                           builder: (context,counter,_){
                             return Text(
-                                (EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList).length-1).toString(),
+                              (EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList).length-1).toString(),
                               style: TextStyle(color: Colors.white,fontSize: 12.0,fontWeight: FontWeight.bold),
                             );
                           },
@@ -88,24 +89,23 @@ class _StoreHomeState extends State<StoreHome> {
           ],
         ),
         drawer: MyDrawer(),
-
         body:
         CustomScrollView(
-           slivers: [
+          slivers: [
             SliverPersistentHeader(pinned: true,delegate: SearchBoxDelegate(),),
             StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection("items").limit(15).orderBy("publishedDate",descending: true).snapshots(),
-              builder: (context,dataSnapshot)
-              {
-               return !dataSnapshot.hasData
-               ? SliverToBoxAdapter(child: Center(child: circularProgress(),),)
-                   : SliverStaggeredGrid.countBuilder(crossAxisCount: 1, staggeredTileBuilder: (c)=>StaggeredTile.fit(1),
-                   itemBuilder: (context,index){
-                     ItemModel model = ItemModel.fromJson(dataSnapshot.data.documents[index].data);
-                     String iditem = dataSnapshot.data.documents[index].documentID;
-                     return sourceInfo(model, context,iditem);
-                   }, itemCount: dataSnapshot.data.documents.length,);
-              }
+                stream: Firestore.instance.collection("items").limit(15).orderBy("publishedDate",descending: true).snapshots(),
+                builder: (context,dataSnapshot)
+                {
+                  return !dataSnapshot.hasData
+                      ? SliverToBoxAdapter(child: Center(child: circularProgress(),),)
+                      : SliverStaggeredGrid.countBuilder(crossAxisCount: 1, staggeredTileBuilder: (c)=>StaggeredTile.fit(1),
+                    itemBuilder: (context,index){
+                      ItemModel model = ItemModel.fromJson(dataSnapshot.data.documents[index].data);
+                      String iditem = dataSnapshot.data.documents[index].documentID;
+                      return sourceInfo(model, context,iditem);
+                    }, itemCount: dataSnapshot.data.documents.length,);
+                }
             )
 
           ],
@@ -164,8 +164,8 @@ Widget sourceInfo(ItemModel model, BuildContext context,String iditem,
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: Colors.pink
+                            shape: BoxShape.rectangle,
+                            color: Colors.pink
                         ),
                         alignment: Alignment.topLeft,
                         width: 40.0,
@@ -185,13 +185,13 @@ Widget sourceInfo(ItemModel model, BuildContext context,String iditem,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(padding: EdgeInsets.only(top: 0.0),
-                          child: Row(
-                            children: [
-                              Text("Price",style: TextStyle(fontSize: 14.0,color: Colors.grey),),
-                              Text((model.price + model.price).toString(),
-                              style: TextStyle(fontSize: 15.0,color: Colors.grey,decoration: TextDecoration.lineThrough),),
-                            ],
-                          ),
+                            child: Row(
+                              children: [
+                                Text("Price",style: TextStyle(fontSize: 14.0,color: Colors.grey),),
+                                Text((model.price + model.price).toString(),
+                                  style: TextStyle(fontSize: 15.0,color: Colors.grey,decoration: TextDecoration.lineThrough),),
+                              ],
+                            ),
                           ),
                           Padding(padding: EdgeInsets.only(top: 0.0),
                             child: Row(
@@ -219,13 +219,13 @@ Widget sourceInfo(ItemModel model, BuildContext context,String iditem,
                     child: Container(),
                   ),
                   Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: Icon(Icons.add_shopping_cart,color: Colors.pinkAccent,),
-                      onPressed: (){
-                        checkItemInCart(model.id, context);
-                      },
-                    )
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: Icon(Icons.add_shopping_cart,color: Colors.pinkAccent,),
+                        onPressed: (){
+                          checkItemInCart(model.id,model, context);
+                        },
+                      )
                   ),
                   Divider(height: 5.0,color: Colors.pinkAccent,)
                 ],
@@ -266,11 +266,11 @@ Widget card({Color primaryColor = Colors.redAccent, String imgPath}) {
     width: width*.34,
     margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
     decoration: BoxDecoration(
-      color: primaryColor,
-      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-      boxShadow: <BoxShadow>[
-        BoxShadow(offset: Offset(0,5),blurRadius: 10.0,color: Colors.grey[200]),
-      ]
+        color: primaryColor,
+        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(offset: Offset(0,5),blurRadius: 10.0,color: Colors.grey[200]),
+        ]
     ),
     child: ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -278,7 +278,7 @@ Widget card({Color primaryColor = Colors.redAccent, String imgPath}) {
         imgPath,
         height: 150.0,
         width: width*.34,
-      fit: BoxFit.fill ,
+        fit: BoxFit.fill ,
       ),
     ),
   );
@@ -286,35 +286,34 @@ Widget card({Color primaryColor = Colors.redAccent, String imgPath}) {
 
 
 
-void checkItemInCart(String id, BuildContext context)
+void checkItemInCart(String id,ItemModel model, BuildContext context)
 {
   EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList).contains(id)
       ? Fluttertoast.showToast(msg: "Item is aldeady in Cart")
-      : addItemToCart(id,context);
+      : addItemToCart(id,model,context);
 }
 
-addItemToCart(String id,BuildContext context){
+addItemToCart(String id,ItemModel model,BuildContext context){
   List tempCartList = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
-  List tempCartListquan = EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartListQuantity);
-  tempCartListquan.add("1");
   tempCartList.add(id);
-  EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
-  .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-  .updateData({
-    EcommerceApp.userCartList: tempCartList,
-  }).then((v){
-    Fluttertoast.showToast(msg: "Item Add Success");
-    EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, tempCartList);
-    Provider.of<CartItemCounter>(context,listen: false).displayResult();
-  });
+  final itemRef = Firestore.instance.collection("users").document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).collection(EcommerceApp.userCartList);
+  itemRef.document(id).setData({
+    "id":id,
+    "shortInfo": model.shortInfo,
+    "longDescription": model.longDescription,
+    "price": model.price,
+    "quantity": 1,
+    "thumbnailUrl": model.thumbnailUrl,
+    "title": model.title,
+  }
+  );
   EcommerceApp.firestore.collection(EcommerceApp.collectionUser)
       .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
       .updateData({
-    EcommerceApp.userCartListQuantity: tempCartListquan,
-  }).then((v){
-    EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartListQuantity, tempCartListquan);
-  });
-
+  EcommerceApp.userCartList: tempCartList});
+  EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, tempCartList);
+  Fluttertoast.showToast(msg: "Item Add Success");
+  Provider.of<CartItemCounter>(context,listen: false).displayResult();
 }
 Widget image_carousel = new Container(
   height: 200.0,

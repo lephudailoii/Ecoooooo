@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Counters/ItemQuantity.dart';
 import 'package:e_shop/Counters/bankcardchanger.dart';
+import 'package:e_shop/Counters/userchanger.dart';
 import 'package:e_shop/Store/storehomedefault.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (c)=> UserChanger()),
       ChangeNotifierProvider(create: (c)=> CartItemCounter()),
       ChangeNotifierProvider(create: (c)=> ItemQuantity()),
       ChangeNotifierProvider(create: (c)=> BankCardChanger()),
@@ -60,6 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
   displaySplash(){
     Timer(Duration(seconds: 1), ()async{
+      await EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList,["garbageValue"] );
       if(await EcommerceApp.auth.currentUser()!=null){
         Route route = MaterialPageRoute(builder: (_)=>StoreHome());
         Navigator.pushReplacement(context, route);

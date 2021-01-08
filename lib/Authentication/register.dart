@@ -184,10 +184,15 @@ class _RegisterState extends State<Register> {
     Firestore.instance.collection("users").document(fUser.uid).setData({
       "uid": fUser.uid,
       "email": fUser.email,
-      "name": _nameTextEditingController.text.trim(),
+      "point":"0"     ,
+      "level":"Normal Customer",
+    "name": _nameTextEditingController.text.trim(),
       EcommerceApp.userCartList: ["garbageValue"],
     });
     await EcommerceApp.sharedPreferences.setString("uid", fUser.uid);
+    await EcommerceApp.sharedPreferences.setString("point","0");
+    await EcommerceApp.sharedPreferences.setString("sale","0");
+    await EcommerceApp.sharedPreferences.setString("level","Normal Customer");
     await EcommerceApp.sharedPreferences
         .setString(EcommerceApp.userEmail, fUser.email);
     await EcommerceApp.sharedPreferences.setString(

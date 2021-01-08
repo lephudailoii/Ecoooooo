@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Admin/uploadItems.dart';
 import 'package:e_shop/Authentication/authenication.dart';
+import 'package:e_shop/Authentication/login.dart';
 import 'package:e_shop/Config/config.dart';
 import 'package:e_shop/Widgets/customTextField.dart';
 import 'package:e_shop/DialogBox/errorDialog.dart';
@@ -126,9 +127,9 @@ class _AdminSignInScreenState extends State<AdminSignInScreen>
               height: 10.0,
             ),
             FlatButton.icon(
-              onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminSignInPage())),
+              onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>Login())),
               icon: (Icon(Icons.nature_people,color: Colors.pink,)),
-              label: Text("i'm Admin",style: TextStyle(color: Colors.pink,fontWeight: FontWeight.bold),),
+              label: Text("i'm not Admin",style: TextStyle(color: Colors.pink,fontWeight: FontWeight.bold),),
 
             ),
             SizedBox(

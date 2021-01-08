@@ -101,7 +101,7 @@ class _SaleState extends State<Sale> {
       StreamBuilder<QuerySnapshot>(
         stream: EcommerceApp.firestore
             .collection("users")
-            .document("GnMXHZ67ikhzbOUQrBHYAdSC8FC3"
+            .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)
         )
             .collection(EcommerceApp.userSale).snapshots(),
         builder: (context, snapshot) {
@@ -179,7 +179,7 @@ class _SaleState extends State<Sale> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("No reriew for this product "),
+                Text("No sale now "),
               ],
             ),
           ),
@@ -285,8 +285,6 @@ class _InFoSaleState extends State<InFoSale> {
                                 Text(widget.model.sale),
                               ]
                           ),
-
-
                         ],
                       ),
                     )
@@ -298,7 +296,8 @@ class _InFoSaleState extends State<InFoSale> {
               message: "Chose",
               onPressed: ()
               {
-                 EcommerceApp.sharedPreferences.setString(EcommerceApp.userSale,widget.model.sale);
+                String sale =widget.model.sale;
+                 EcommerceApp.sharedPreferences.setString(EcommerceApp.userSale,sale);
                           Navigator.pop(context);
                      },
             )
